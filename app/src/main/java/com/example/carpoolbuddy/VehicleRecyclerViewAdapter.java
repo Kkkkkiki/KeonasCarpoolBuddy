@@ -24,7 +24,6 @@ public class VehicleRecyclerViewAdapter extends RecyclerView.Adapter<VehicleView
         carOwnerNames = ownerData;
         carSeatsLeft = seatsData;
         this.listener = listener;
-
     }
 
     @Override
