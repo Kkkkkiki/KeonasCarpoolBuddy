@@ -1,4 +1,4 @@
-package com.example.carpoolbuddy;
+package com.example.carpoolbuddy.people;
 
 import java.util.ArrayList;
 

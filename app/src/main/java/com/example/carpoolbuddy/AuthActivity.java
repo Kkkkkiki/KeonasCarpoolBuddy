@@ -22,10 +22,7 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 
-import java.util.UUID;
 
 public class AuthActivity extends AppCompatActivity {
 
@@ -50,8 +47,6 @@ public class AuthActivity extends AppCompatActivity {
         firestore = FirebaseFirestore.getInstance();
         emailField = findViewById(R.id.editTextTextEmail);
         passwordField = findViewById(R.id.editTextPassword);
-
-//TODO creative task
 
         //auto sign in
         if (mAuth.getCurrentUser() != null) {
@@ -86,29 +81,10 @@ public class AuthActivity extends AppCompatActivity {
                     }
                 });
     }
-
+//new user direct to new UI
     public void signUp(View v) {
-        String emailString = emailField.getText().toString();
-        String passwordString = passwordField.getText().toString();
-
-        mAuth.createUserWithEmailAndPassword(emailString, passwordString)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            Log.d(TAG, "createUserWithEmail:success");
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            updateUI(user);
-                        } else {
-                            // If sign in fails, display a message to the user.
-                            Log.w(TAG, "createUserWithEmail:failure", task.getException());
-                            Toast.makeText(AuthActivity.this, "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
-                            updateUI(null);
-                        }
-                    }
-                });
+       Intent intent = new Intent(this, SignUpActivity.class);
+       startActivity(intent);
     }
 
     public void updateUI(FirebaseUser currentUser) {

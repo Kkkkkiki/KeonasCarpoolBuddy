@@ -13,21 +13,23 @@ public class VehicleViewHolder extends RecyclerView.ViewHolder implements View.O
     protected TextView seatsLeftTextView;
     Context mContext;
 
-    private VehicleRecyclerViewAdapter.RecyclerViewClickLister listener;
-
+    private VehicleRecyclerViewAdapter.vehicleListener listener;
+    //Add intent to Viewholder to take you to VehicleProfileActivity
+    // and Create vehicleProfileActivity
     //User CAN click on recyclerView rows and see information for the vehicle
 
-    public VehicleViewHolder(@NonNull View itemView) {
+    public VehicleViewHolder(@NonNull View itemView, VehicleRecyclerViewAdapter.vehicleListener listener) {
         super(itemView);
         mContext = itemView.getContext();
         nameText = itemView.findViewById(R.id.nameTextView);
         seatsLeftTextView = itemView.findViewById(R.id.seatsLeftTextView);
+
+        this.listener = listener;
         itemView.setOnClickListener(this);
     }
 
-
     @Override
-    public void onClick(View view) {
-        listener.onClick(view, getAdapterPosition());
+    public void onClick(View v) {
+        listener.vehicleOnClick(getAdapterPosition());
     }
 }

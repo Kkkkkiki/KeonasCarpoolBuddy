@@ -20,6 +20,7 @@ public class AddVehicleActivity extends AppCompatActivity {
     private EditText carModelField;
     private EditText capacityField;
     private EditText ageField;
+    private EditText emailField;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +32,7 @@ public class AddVehicleActivity extends AppCompatActivity {
         carModelField = findViewById(R.id.editTextCarModel);
         capacityField = findViewById(R.id.editTextCapacity);
         ageField = findViewById(R.id.editTextAge);
+        emailField = findViewById(R.id.emailField);
     }
 
     public int convertStringToInteger(String inputString){
@@ -50,6 +52,7 @@ public class AddVehicleActivity extends AppCompatActivity {
         String carModelString = carModelField.getText().toString();
         String capacityString = capacityField.getText().toString();
         String ageString = ageField.getText().toString();
+        String emailString = emailField.getText().toString();
 
         if (!(ownerString.isEmpty() || carModelString.isEmpty() || capacityString.isEmpty() || ageString.isEmpty() )) {
             if( convertStringToInteger(capacityString) > 0 && convertStringToInteger(ageString)> 0){
@@ -63,8 +66,7 @@ public class AddVehicleActivity extends AppCompatActivity {
         return false;
     }
 
-    //TBD, add image button to the vehicle❌
-    //tbd ❌
+    //done
     public void addNewVehicle(View v) {
         try{
             //Call formValid to check if input is ok
@@ -76,8 +78,9 @@ public class AddVehicleActivity extends AppCompatActivity {
             String carModelString = carModelField.getText().toString();
             String capacityString = capacityField.getText().toString();
             String ageString = ageField.getText().toString();
+            String emailString = emailField.getText().toString();
 
-            Vehicle newVehicle = new Vehicle (ownerString, carModelString, convertStringToInteger(capacityString), ageString );
+            Vehicle newVehicle = new Vehicle (ownerString, carModelString, convertStringToInteger(capacityString), ageString, emailString );
             firestore.collection("Vehicles").document(newVehicle.getVehicleID()).set(newVehicle);
             goToVehicleInfoActivity();
             finish();

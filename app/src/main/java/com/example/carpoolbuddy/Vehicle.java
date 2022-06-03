@@ -12,12 +12,18 @@ public class Vehicle {
     private boolean open;
     private String age;
     private double basePrice;
+    private String email;
 
-    public Vehicle(String owner, String model, int capacity, String age) {
+    public String getEmail() {
+        return email;
+    }
+
+    public Vehicle(String owner, String model, int capacity, String age, String email) {
         this.owner = owner;
         this.model = model;
         this.capacity = capacity;
         this.age = age;
+        this.email = email;
         vehicleID = String.valueOf((int)(Math.random()*10000));
     }
 
@@ -42,6 +48,11 @@ public class Vehicle {
 
     public String getOwner() {
         return owner;
+    }
+
+    public String openToString() {
+        return "The status is" +
+                 open+ "";
     }
 
     public void setOwner(String owner) {
@@ -104,4 +115,5 @@ public class Vehicle {
     public void setAge(String age) {
         this.age = age;
     }
+
 }

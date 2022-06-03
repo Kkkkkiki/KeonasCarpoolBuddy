@@ -20,16 +20,18 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.List;
 
-public class VehiclesInfoActivity extends AppCompatActivity {
+public class VehiclesInfoActivity extends AppCompatActivity implements VehicleRecyclerViewAdapter.vehicleListener {
     RecyclerView recView;
     ArrayList carOwnerNames;
     ArrayList seatsLeft;
 
     private FirebaseAuth mAuth;
     private FirebaseFirestore firestore;
-    private FirebaseUser user;
-    private VehicleRecyclerViewAdapter.RecyclerViewClickLister listener;
+    public static Vehicle vehicleChosen;
+    public static Vehicle clickedVehicle;
+    private VehicleRecyclerViewAdapter myAdapter;
 
     private ArrayList<Vehicle> vehicleList;
 
@@ -47,9 +49,14 @@ public class VehiclesInfoActivity extends AppCompatActivity {
         carOwnerNames = new ArrayList();
         seatsLeft = new ArrayList();
 
+        //set the adapter
+         myAdapter = new VehicleRecyclerViewAdapter(carOwnerNames, seatsLeft, this);
+        recView.setAdapter(myAdapter);
+        recView.setLayoutManager(new LinearLayoutManager(this));
+
         //we are getting information from the data base and we need to fetch all the data from the firebase
         getAndPopulateData();
-        recView.setLayoutManager(new LinearLayoutManager(this));
+
     }
 
     public void getAndPopulateData() {
@@ -59,8 +66,8 @@ public class VehiclesInfoActivity extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
-                    QuerySnapshot ds = task.getResult();
-                    for (QueryDocumentSnapshot document : ds) {
+                    List<DocumentSnapshot> ds = task.getResult().getDocuments();
+                    for (DocumentSnapshot document : ds) {
                         //Use document.toObject(Vehicle.class)
                         // This will deserialize the contents of the database information and give you a Vehicle object.
                         Vehicle objectVehicle = document.toObject(Vehicle.class);
@@ -68,31 +75,31 @@ public class VehiclesInfoActivity extends AppCompatActivity {
                         // Add all vehicles to the vehicles ArrayList.
                         //On completion of task for fetching all vehicles, set new RecyclerViewAdapter with the list of vehicles fetched.
                         vehicleList.add(objectVehicle);
-
-                        Log.d("KEONA TEST", objectVehicle.getOwner());
                     }
-                    setOnClickListener();
-                    VehicleRecyclerViewAdapter myAdapter = new VehicleRecyclerViewAdapter(vehicleList, listener);
-                    recView.setAdapter(myAdapter);
 
-                } else {
-                    Log.d("Error getting documents: ", String.valueOf(task.getException()));
+                    for (Vehicle v : vehicleList){
+                        String seats = String.valueOf(v.getCapacity());
+                        seatsLeft.add(seats);
+
+                        String owner = v.getOwner();
+                        carOwnerNames.add(owner);
+                    }
+                    myAdapter.addNewdata(carOwnerNames, seatsLeft);
+                    myAdapter.notifyDataSetChanged();
+
+                } else //if user doesnt have vehicle then:
+                    {
+                    Log.d("Wait... you don't have vehicles ", String.valueOf(task.getException()));
                     //and this
                 }
             }
         });
 
     }
-
-    private void setOnClickListener() {
-        listener = new VehicleRecyclerViewAdapter.RecyclerViewClickLister() {
-            @Override
-            public void onClick(View v, int position) {
-                //go to vehicle info activity when you click~
-                Intent intent = new Intent(getApplicationContext(), VehiclesInfoActivity.class);
-                startActivity(intent);
-            }
-        };
+    public void vehicleOnClick(int position) {
+        clickedVehicle = vehicleList.get(position);
+        Intent intent = new Intent(this, VehicleProfileActivity.class);
+        startActivity(intent);
     }
 
     public void goToAddVehicle(View v) {
